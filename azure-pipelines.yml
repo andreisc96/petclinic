@@ -16,10 +16,7 @@ stages:
         inputs:
           #azureSubscription: 'Azure subscription 1(0fa225b2-6ae6-47ee-931c-b34ef669c09c)'
           mavenPomFile: 'pom.xml'
-          goals: 'clean package -DskipTests'
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '$(System.DefaultWorkingDirectory)/bin/WebApp'
-          publishLocation: 'pipeline'
-          artifactName: WebApp    
+          goals: 'package'
+      - publish: 'target/*.jar'
+        artifact: 'drop' 
 
