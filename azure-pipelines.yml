@@ -1,6 +1,4 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
+# The below pipeline is designed to build the .jar for petclinic app
 # https://aka.ms/yaml
 
 trigger:
@@ -9,11 +7,19 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      steps:
+      - task: Maven@4
+        inputs:
+          azureSubscription: 'Azure subscription 1(0fa225b2-6ae6-47ee-931c-b34ef669c09c)'
+          mavenPomFile: 'pom.xml'
+          goals: 'clean package -DskipTests'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/bin/WebApp'
+          publishLocation: 'pipeline'
+          artifactName: WebApp    
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
