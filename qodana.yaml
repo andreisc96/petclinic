@@ -28,5 +28,4 @@ profile:
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm-community
 projectJDK: 17
-exclude:
-  - path: target/
+
