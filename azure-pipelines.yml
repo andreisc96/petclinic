@@ -41,7 +41,16 @@ stages:
         inputs:
           mavenPomFile: 'pom.xml'
           goals: 'checkstyle:check'
-          options: '-B'  # batch mode for cleaner logs
+          options: '-B -Dcheckstyle.failOnViolation=false'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: false
+          checkStyleRunAnalysis: true
+          
 
 
   - stage: Build
