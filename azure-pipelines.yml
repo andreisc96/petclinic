@@ -25,8 +25,8 @@ stages:
            docker run --rm -u $(id -u):$(id -g) \
            -v $(System.DefaultWorkingDirectory):/data/project \
            -v $(System.DefaultWorkingDirectory)/qodana/results:/data/results \
-           -e JAVA_OPTS="-Dproject.open.type=Maven" \
            jetbrains/qodana-jvm-community:latest
+           --property project.open.type=Maven
          displayName: 'Run linter'
 
        - task: PublishBuildArtifacts@1

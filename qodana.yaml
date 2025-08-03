@@ -29,3 +29,5 @@ profile:
 linter: jetbrains/qodana-jvm-community:latest
 projectJDK: 17
 
+environment:
+  project.open.type: Maven
