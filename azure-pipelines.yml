@@ -1,6 +1,6 @@
-# The below pipeline is designed to build the .jar for petclinic app
+# The below pipeline is designed to build the .jar for petclinic app and then deploy it from an Ansible control node
 # https://aka.ms/yaml
-# test
+
 
 trigger:
 - main
@@ -9,6 +9,29 @@ pool:
   name: Default
 
 stages:
+  - stage: Test
+    jobs:
+    - job: QodanaLint
+      steps:
+       - checkout: self
+
+       - script: mkdir -p $(System.DefaultWorkingDirectory)/qodana/results
+         displayName: 'Create results path'
+
+       - script: |
+           set -e
+           docker run --rm \
+           -v $(System.DefaultWorkingDirectory):/data/project \
+           -v $(System.DefaultWorkingDirectory)/qodana/results:/data/results \
+           jetbrains/qodana-jvm
+         displayName: 'Run linter'
+
+       - task: PublishBuildArtifacts@1
+         inputs:
+           PathtoPublish: '$(System.DefaultWorkingDirectory)/qodana/results'
+           ArtifactName: 'qodana-report'
+           publishLocation: 'Container'
+
   - stage: Build
     jobs:
     - job: BuildJob
@@ -18,6 +41,7 @@ stages:
           #azureSubscription: 'Azure subscription 1(0fa225b2-6ae6-47ee-931c-b34ef669c09c)'
           mavenPomFile: 'pom.xml'
           goals: 'package'
+
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
         artifact: 'drop'
 
