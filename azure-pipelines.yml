@@ -23,7 +23,7 @@ stages:
            docker run --rm \
            -v $(System.DefaultWorkingDirectory):/data/project \
            -v $(System.DefaultWorkingDirectory)/qodana/results:/data/results \
-           jetbrains/qodana-jvm
+           jetbrains/qodana-jvm-community
          displayName: 'Run linter'
 
        - task: PublishBuildArtifacts@1
