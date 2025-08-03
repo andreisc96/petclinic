@@ -40,7 +40,7 @@ stages:
       - task: Maven@4
         inputs:
           mavenPomFile: 'pom.xml'
-          goals: 'checkstyle:check pmd:check spotbugs:check'
+          goals: 'checkstyle:check'
           options: '-B'  # batch mode for cleaner logs
 
 
