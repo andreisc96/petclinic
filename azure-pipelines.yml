@@ -1,5 +1,6 @@
 # The below pipeline is designed to build the .jar for petclinic app
 # https://aka.ms/yaml
+# test
 
 trigger:
 - main
