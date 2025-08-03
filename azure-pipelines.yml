@@ -15,15 +15,17 @@ stages:
       steps:
        - checkout: self
 
-       - script: mkdir -p $(System.DefaultWorkingDirectory)/qodana/results
+       - script: |
+           mkdir -p $(System.DefaultWorkingDirectory)/qodana/results
+           rm -rf $(System.DefaultWorkingDirectory)/qodana/results/*
          displayName: 'Create results path'
 
        - script: |
            set -e
-           docker run --rm \
+           docker run --rm -u $(id -u):$(id -g) \
            -v $(System.DefaultWorkingDirectory):/data/project \
            -v $(System.DefaultWorkingDirectory)/qodana/results:/data/results \
-           jetbrains/qodana-jvm-community
+           jetbrains/qodana-jvm-community:latest
          displayName: 'Run linter'
 
        - task: PublishBuildArtifacts@1
