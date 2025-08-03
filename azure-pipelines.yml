@@ -27,6 +27,6 @@ stages:
       steps:
        - download: current
          artifact: drop
-       - script: ansible-playbook -i /etc/ansible/hosts/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml
+       - script: ansible-playbook -i inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml
          displayName: 'Deploying app with Ansible'    
 
