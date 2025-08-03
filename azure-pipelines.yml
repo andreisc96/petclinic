@@ -45,7 +45,7 @@ stages:
 
 
   - stage: Build
-    dependsOn: Lint
+    dependsOn: Test
     jobs:
     - job: BuildJob
       steps:
