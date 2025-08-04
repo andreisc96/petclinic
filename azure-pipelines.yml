@@ -9,7 +9,8 @@ pool:
   name: Default
 
 stages:
-  - stage: Test
+  - stage: Lint
+    displayName: 'Running linting tests on the repo'
     jobs:
 #    - job: QodanaLint
 #      steps:
@@ -42,21 +43,40 @@ stages:
           mavenPomFile: 'pom.xml'
           goals: 'checkstyle:check'
           options: '-B -Dcheckstyle.failOnViolation=false'
-          publishJUnitResults: true
-          testResultsFiles: '**/surefire-reports/TEST-*.xml'
           javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '17'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
           sonarQubeRunAnalysis: false
-          checkStyleRunAnalysis: true
-          
+
+
+  - stage: Test
+    dependsOn: Lint
+    displayName: 'Running unit tests'
+    jobs:
+      - job: RunUnitTests
+        steps:
+          - checkout: self
+          - task: Maven@4
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'test'
+              options: '-B -Dcheckstyle.failOnViolation=false'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '17'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
 
 
   - stage: Build
     dependsOn: Test
     jobs:
     - job: BuildJob
+      displayName: 'Build the .jar'
       steps:
       - task: Maven@4
         inputs:
@@ -64,6 +84,9 @@ stages:
           mavenPomFile: 'pom.xml'
           goals: 'package'
           options: '-B -Dcheckstyle.failOnViolation=false -DskipTests'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '17'
+          mavenVersionOption: 'Default'
 
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
         artifact: 'drop'
@@ -72,6 +95,7 @@ stages:
     dependsOn: Build 
     jobs:
     - job: DeployJob
+      displayName: 'Deploy artifact on AS'
       steps:
        - download: current
          artifact: drop
