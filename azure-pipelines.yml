@@ -88,7 +88,7 @@ stages:
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
         artifact: 'drop'
 
-  - stage: Deploy
+  - stage: Deploy Web
     dependsOn: Build 
     jobs:
     - job: DeployJob
@@ -96,6 +96,15 @@ stages:
       steps:
        - download: current
          artifact: drop
-       - script: ansible-playbook -i /home/osansible/ansibleconfig/inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml
-         displayName: 'Deploying app with Ansible'    
+       - script: ansible-playbook -i /home/osansible/ansibleconfig/inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml --limit webpetclinic
+
+
+  - stage: Deploy Monitoring
+    dependsOn: Deploy artifact
+    jobs:
+      - job: DeployJob
+        displayName: 'Deploy Prometheus and Grafana'
+        steps:
+          - script: ansible-playbook -i /home/osansible/ansibleconfig/inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml --limit monitoring
+
 
