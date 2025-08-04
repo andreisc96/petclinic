@@ -44,7 +44,6 @@ stages:
           goals: 'checkstyle:check'
           options: '-B -Dcheckstyle.failOnViolation=false'
           javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '17'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
@@ -66,7 +65,6 @@ stages:
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '17'
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
               effectivePomSkip: false
@@ -85,7 +83,6 @@ stages:
           goals: 'package'
           options: '-B -Dcheckstyle.failOnViolation=false -DskipTests'
           javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '17'
           mavenVersionOption: 'Default'
 
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
