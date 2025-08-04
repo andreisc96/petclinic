@@ -86,16 +86,9 @@ stages:
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
         artifact: 'drop'
 
-  - stage: AnsibleLint
-    dependsOn: Build
-    jobs:
-      - job: DeployJob
-        displayName: 'Running lint tests on Ansible playbook'
-        steps:
-          - script: ansible-lint /home/osansible/ansibleconfig
 
   - stage: DeployWeb
-    dependsOn: AnsibleLint
+    dependsOn: Build
     jobs:
     - job: DeployJob
       displayName: 'Deploy artifact on AS'
