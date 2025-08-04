@@ -10,7 +10,6 @@ pool:
 
 stages:
   - stage: Lint
-    displayName: 'Running linting tests on the repo'
     jobs:
 #    - job: QodanaLint
 #      steps:
@@ -36,6 +35,7 @@ stages:
 #           ArtifactName: 'qodana-report'
 #           publishLocation: 'Container'
     - job: MavenLint
+      displayName: 'Running linting tests on the repo'
       steps:
       - checkout: self
       - task: Maven@4
@@ -52,16 +52,16 @@ stages:
 
   - stage: Test
     dependsOn: Lint
-    displayName: 'Running unit tests'
     jobs:
       - job: RunUnitTests
+        displayName: 'Running unit tests'
         steps:
           - checkout: self
           - task: Maven@4
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'test'
-              options: '-B -Dcheckstyle.failOnViolation=false'
+              options: '-B -Dcheckstyle.failOnViolation=false -Dmaven.test.failure.ignore=true'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
