@@ -15,7 +15,7 @@ stages:
   - stage: Lint
     jobs:
     - job: MavenLint
-      displayName: 'Running lint tests on the repo'
+      displayName: 'Run lint tests'
       steps:
       - checkout: self
       - task: Maven@4
@@ -25,15 +25,12 @@ stages:
           options: '-B -Dcheckstyle.failOnViolation=false'
           javaHomeOption: 'JDKVersion'
           mavenVersionOption: 'Default'
-          mavenAuthenticateFeed: false
-          effectivePomSkip: false
-          sonarQubeRunAnalysis: false
 
   - stage: Test
     dependsOn: Lint
     jobs:
       - job: RunUnitTests
-        displayName: 'Running unit tests'
+        displayName: 'Run unit tests'
         steps:
           - checkout: self
           - task: Maven@4
@@ -45,18 +42,15 @@ stages:
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
               mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
 
   - stage: Build
     dependsOn: Test
     jobs:
     - job: BuildJob
-      displayName: 'Build the .jar'
+      displayName: 'Build the .jar artifact'
       steps:
       - task: Maven@4
         inputs:
-          #azureSubscription: 'Azure subscription 1(0fa225b2-6ae6-47ee-931c-b34ef669c09c)'
           mavenPomFile: 'pom.xml'
           goals: 'package'
           options: '-B -Dcheckstyle.failOnViolation=false -DskipTests'
@@ -66,12 +60,11 @@ stages:
       - publish: 'target/spring-petclinic-3.5.0-SNAPSHOT.jar'
         artifact: 'drop'
 
-
   - stage: DeployWeb
     dependsOn: Build
     jobs:
     - job: DeployJob
-      displayName: 'Deploy artifact on AS'
+      displayName: 'Deploy artifact on Web AS'
       steps:
        - download: current
          artifact: drop
