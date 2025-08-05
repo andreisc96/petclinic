@@ -8,6 +8,9 @@ trigger:
 pool:
   name: Default
 
+variables:
+  - group: AnsiblePaths
+
 stages:
   - stage: Lint
     jobs:
