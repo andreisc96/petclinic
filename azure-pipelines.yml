@@ -98,7 +98,7 @@ stages:
       steps:
        - download: current
          artifact: drop
-       - script: ansible-playbook -i /home/osansible/ansibleconfig/inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml --limit webpetclinic
+       - script: ansible-playbook -i $(INVENTORY_PATH) $(PLAYBOOK_PATH) --limit webpetclinic
 
   - stage: DeployMonitoring
     dependsOn: DeployWeb
@@ -106,6 +106,6 @@ stages:
       - job: DeployJob
         displayName: 'Deploy Prometheus and Grafana'
         steps:
-          - script: ansible-playbook -i /home/osansible/ansibleconfig/inventories/inventory.ini /home/osansible/ansibleconfig/main_playbook.yml --limit monitoring
+          - script: ansible-playbook -i $(INVENTORY_PATH) $(PLAYBOOK_PATH) --limit monitoring
 
 
